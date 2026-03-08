@@ -115,6 +115,13 @@ call plug#end()
 " Plugin Config
 " =============================================================================
 
+" CoC completion
+inoremap <silent><expr> <TAB>
+            \ coc#pum#visible() ? coc#pum#next(1) :
+            \ "\<Tab>"
+inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
+inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm() : "\<CR>"
+
 " Python syntax
 let g:python_highlight_all = 1
 
