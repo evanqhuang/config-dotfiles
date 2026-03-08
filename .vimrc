@@ -1,20 +1,37 @@
+" =============================================================================
+" General
+" =============================================================================
+set nocompatible
+set encoding=UTF-8
+let mapleader = " "
+
+" =============================================================================
+" Indentation
+" =============================================================================
 set expandtab
 set tabstop=4
 set shiftwidth=4
-set background=dark
-"set termguicolors
 set autoindent
 set smartindent
+
+" =============================================================================
+" UI
+" =============================================================================
 set number
 set ruler
-"display full filepath all the time and line/col num
-set statusline+=%F\ %l\:%c
-"display path in last command box
+set background=dark
+"set termguicolors
 set laststatus=2
 set title
 syntax on
 filetype indent plugin on
-set encoding=UTF-8
+
+"display full filepath all the time and line/col num
+set statusline+=%F\ %l\:%c
+
+" =============================================================================
+" Key Mappings
+" =============================================================================
 
 "Remove all trailing whitespace by pressing F5
 nnoremap <F5> :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar><CR>
@@ -24,31 +41,14 @@ nnoremap <C-t> :NERDTreeToggle<CR>
 imap <c-x><c-k> <plug>(fzf-complete-word)
 imap <c-x><c-f> <plug>(fzf-complete-path)
 imap <c-x><c-j> <plug>(fzf-complete-file-ag)
-imap <c-x><c-l> <plug>(fzf-complete-line
-" <TAB>: completion.
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+imap <c-x><c-l> <plug>(fzf-complete-line)
 
-let g:deepspace_italics=1
-set nocompatible
+" Run Python file with <space>r
+autocmd FileType python nnoremap <leader>r :w<CR>:AsyncRun -mode=term -pos=bottom -rows=10 python "%"<CR>
 
-"syntastic config
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
-"resize syntastic window automatically
-function! SyntasticCheckHook(errors)
-    if !empty(a:errors)
-        let g:syntastic_loc_list_height = min([len(a:errors), 10])
-    endif
-endfunction
-
-
-
+" =============================================================================
+" Plugin Manager (vim-plug)
+" =============================================================================
 if empty(glob('~/.vim/autoload/plug.vim'))
     silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
                 \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
@@ -57,15 +57,29 @@ endif
 
 call plug#begin('~/.vim/plugged')
 
+" Utility
+Plug 'scrooloose/nerdtree'
+Plug 'majutsushi/tagbar'
+Plug 'junegunn/fzf'
+Plug 'junegunn/fzf.vim'
+Plug 'godlygeek/tabular'
+Plug 'benmills/vimux'
+Plug 'jeetsukumaran/vim-buffergator'
+Plug 'tpope/vim-dispatch'
+Plug 'skywind3000/asyncrun.vim'
 
-"assembly syntax highlighting
-Plug 'shirk/vim-gas'
+" Linting
+Plug 'dense-analysis/ale'
 
-"autoindent for php and html
-"Plug 'captbaritone/better-indent-support-for-php-with-html'
-Plug '2072/vim-syntax-for-PHP'
+" Completion
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
+" Generic Programming Support
 Plug 'sheerun/vim-polyglot'
+Plug 'honza/vim-snippets'
+Plug 'Townk/vim-autoclose'
+Plug 'tomtom/tcomment_vim'
+Plug 'janko-m/vim-test'
 
 "auto close tag for html
 "Plug 'alvan/vim-closetag'
@@ -75,62 +89,43 @@ Plug 'sheerun/vim-polyglot'
 "auto parenthese etc
 "Plug 'jiangmiao/auto-pairs'
 "let g:AutoPairsShortcutToggle = '<C-k>'
-let g:AutoPairs = {'(':')', '[':']', '{':'}', "`":"`", '```':'```', '"""':'"""', "'''":"'''"}
 
-" Utility
-Plug 'scrooloose/nerdtree'
-Plug 'majutsushi/tagbar'
-Plug 'ervandew/supertab'
-Plug 'wesQ3/vim-windowswap'
-Plug 'junegunn/fzf.vim'
-Plug 'junegunn/fzf'
-Plug 'godlygeek/tabular'
-Plug 'ctrlpvim/ctrlp.vim'
-Plug 'benmills/vimux'
-Plug 'jeetsukumaran/vim-buffergator'
-Plug 'gilsondev/searchtasks.vim'
-Plug 'Shougo/neocomplete.vim'
-Plug 'tpope/vim-dispatch'
-
-" Generic Programming Support 
-Plug 'honza/vim-snippets'
-Plug 'Townk/vim-autoclose'
-Plug 'tomtom/tcomment_vim'
-Plug 'tobyS/vmustache'
-Plug 'janko-m/vim-test'
-Plug 'maksimr/vim-jsbeautify'
-Plug 'vim-syntastic/syntastic'
-Plug 'neomake/neomake'
-Plug 'tpope/vim-rails'
-
-"python highlighting
+" Python
 Plug 'vim-python/python-syntax'
-let g:python_highlight_all = 1
 
-" Markdown / Writting
-Plug 'reedes/vim-pencil'
+" Markdown
 Plug 'tpope/vim-markdown'
-Plug 'jtratner/vim-flavored-markdown'
 
 " Git Support
-Plug 'kablamo/vim-git-log'
-Plug 'gregsexton/gitv'
 Plug 'tpope/vim-fugitive'
-Plug 'jaxbot/github-issues.vim'
+"Plug 'jaxbot/github-issues.vim'
 
-"wakatime metrics
+" Metrics
 Plug 'wakatime/vim-wakatime'
 
-"visual stuff
+" Themes
 Plug 'dracula/vim', { 'as': 'dracula' }
 Plug 'sonph/onehalf', { 'rtp': 'vim' }
 Plug 'joshdick/onedark.vim'
+Plug 'rakr/vim-one'
 
-"color scheme for non 256bit
-Plug 'rakr/vim-one' 
 call plug#end()
 
-"use vim gas for asm highlighting
-let asmsyntax="gas"
+" =============================================================================
+" Plugin Config
+" =============================================================================
 
+" Python syntax
+let g:python_highlight_all = 1
+
+" Deepspace
+let g:deepspace_italics=1
+
+" Theme
 colorscheme onehalfdark
+
+" Cursor line
+set cursorline
+hi CursorLineNr   term=bold ctermfg=167 gui=bold guifg=#d75f5f
+hi CursorLine term=None ctermfg=none ctermbg=none
+"set cursorlineopt=number
